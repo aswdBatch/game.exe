@@ -165,7 +165,7 @@ echo.
 echo -----------------------------------------
 echo.
 echo "Well, there is ONE more zone..."
-echo. 
+echo.
 echo "But it is dangerous. It has light, but there's one thing that's holding it off..."
 echo.
 echo "We don't know exactly what, but anyone who went there never came back."
@@ -188,7 +188,7 @@ echo.
 echo ...
 echo.
 echo "Yeah you have to go."
-set /p answer=(y/n): 
+set /p answer=(y/n):
 if /I "%answer%"=="n" shutdown.exe /s /t 10
 pause
 
@@ -594,7 +594,7 @@ pause
 endlocal
 goto Permadeath-guide
 
-:BfThird
+:BfThird.
 echo Third.>save.txt
 cls
 echo -----------------------------------------
@@ -616,7 +616,7 @@ if errorlevel 1 (
         echo Badge: [SILVER] beat Chapter 2
         echo Complete chapter 2 "Then The Ashes Fell..."
         echo Claimed: "...Then The Ashes Fell..."
-        echo 
+        echo
         echo ================================
     ) >> "%basedir%Badges.txt"
 goto Beta-Win
@@ -657,15 +657,419 @@ if errorlevel 1 (
 cls
 echo -----------------------------------------
 echo.
-echo BETA FINISHED
+echo BETA OPTION
 echo.
 echo -----------------------------------------
 echo.
 echo Heya!
 echo.
-echo You finished the beta.
+echo You finished the currently fully done chapters.
 echo.
-echo Chapter 3 soon?!?!
+echo Wanna do chapter 4 early? U can do dat :D
 echo.
 pause
+goto Third.
+
+
+:Third.
+echo Third.>save.txt
+cls
+echo -----------------------------------------
+echo.
+echo Chapter Three: No hope, No mercy. (1/9)
+echo.
+echo -----------------------------------------
+echo.
+echo The elevator rattles and shakes...
+echo.
+echo It stops suddenly.
+echo.
+echo The doors open, revealing... a void.
+echo.
+pause
+
+cls
+echo -----------------------------------------
+echo.
+echo Chapter Three: No hope, No mercy. (2/9)
+echo.
+echo -----------------------------------------
+echo.
+echo Voices whisper all around you.
+echo.
+echo "You should not be here."
+echo.
+echo "There is no hope here."
+echo.
+echo "Only mercy... denied."
+echo.
+pause
+
+cls
+echo -----------------------------------------
+echo.
+echo Chapter Three: No hope, No mercy. (3/9)
+echo.
+echo -----------------------------------------
+echo.
+echo Before you is a terminal locked with 4 switches.
+echo.
+echo They must be flipped in the right order.
+echo.
+echo A strange note is in your inventory: "HOPE"
+echo.
+echo Maybe... that's the order?
+echo.
+echo.
+echo Puzzle: Enter the correct order of letters (H,O,P,E)
+set /p puzzle1="Order: "
+if /I "%puzzle1%"=="HOPE" goto Ch3-pass1
+goto Ch3-fail1
+
+:Ch3-fail1
+cls
+echo The switches spark violently.
+echo.
+echo You take damage.
+set /a playerHealth-=20
+if %playerHealth% LEQ 0 goto bossdeath
+pause
+goto Third.
+
+:Ch3-pass1
+cls
+echo The switches click.
+echo.
+echo A door unlocks ahead.
+pause
+
+cls
+echo -----------------------------------------
+echo.
+echo Chapter Three: No hope, No mercy. (4/9)
+echo.
+echo -----------------------------------------
+echo.
+echo You walk into the next room.
+echo.
+echo A terminal screen flickers:
+echo.
+echo "PASSWORD REQUIRED."
+echo.
+echo [TIP: Look in folder MERCY on Desktop]
+echo.
+pause
+cd /d "%userprofile%\Desktop"
+md MERCY >nul 2>&1
+echo Salvation>key.txt
+set /p code3="Enter Password: "
+if /I "%code3%"=="Salvation" goto Ch3-pass2
+goto Ch3-fail2
+
+:Ch3-fail2
+cls
+echo Access Denied.
+echo.
+echo The screen shocks you with static.
+set /a playerHealth-=15
+if %playerHealth% LEQ 0 goto bossdeath
+pause
+goto Third.
+
+:Ch3-pass2
+cls
+echo Access Granted.
+echo.
+echo The void shifts into a staircase leading downward.
+echo.
+pause
+cd /d "%basedir%"
+
+cls
+echo -----------------------------------------
+echo.
+echo Chapter Three: No hope, No mercy. (5/9)
+echo.
+echo -----------------------------------------
+echo.
+echo On a pedestal lies a weapon...
+echo.
+echo You pick it up. It's a REVOLVER.
+echo.
+echo [UNLOCKED WEAPON: Revolver]
+echo.
+echo Revolver Modes:
+echo [1] Normal Fire (safe, 15-25 dmg)
+echo [2] Piercer Fire (30-50 dmg, but 1/3 chance to shock you for 15 dmg)
+echo.
+pause
+goto miniboss-ch3
+
+:miniboss-ch3
+setlocal enabledelayedexpansion
+set "enemyName=Tormented"
+set "enemyHealth=80"
+set /a playerHealth=100
+set "usedNormal=0"
+set "usedPiercer=0"
+
+echo.
+echo A shadow emerges...
+echo The Tormented stares at you.
+echo.
+echo [TUTORIAL] Use your revolver to survive. Both Normal and Piercer must be used!
+echo.
+echo [TUTORIAL] The Tormented can only, and ONLY be finished if shot with revolver. Punches put him at 10 hp if oneshot.
+pause
+
+:ch3minibossloop
+cls
+echo -----------------------------------------
+echo.
+echo Chapter Three: No hope, No mercy. (Tutorial: !enemyName!)
+echo.
+echo -----------------------------------------
+echo Your Health: !playerHealth!
+echo !enemyName! Health: !enemyHealth!
+echo.
+echo [1] Revolver - Normal Fire
+echo [2] Revolver - Piercer Fire (risky)
+set /p move="> "
+
+if "!move!"=="1" goto rev-normal
+if "!move!"=="2" goto rev-piercer
+goto ch3minibossloop
+
+:rev-normal
+set /a dmg=12 + (!random! %% 9)
+set "usedNormal=1"
+echo You fire a normal shot for !dmg! damage!
+set /a enemyHealth-=dmg
+if !enemyHealth! LEQ 0 goto ch3tutorialcheck
+goto ch3minibossturn
+
+:rev-piercer
+set /a dmg=25 + (!random! %% 15)
+set "usedPiercer=1"
+echo You fire a PIERCE shot for !dmg! damage!
+set /a enemyHealth-=dmg
+if !enemyHealth! LEQ 0 goto ch3tutorialcheck
+set /a backlash=!random! %% 5
+if !backlash!==0 (
+    echo The revolver shocks you with static! You take 10 damage!
+    set /a playerHealth-=10
+    if !playerHealth! LEQ 0 goto bossdeath
+)
+goto ch3minibossturn
+
+:ch3minibossturn
+set /a enemydmg=8 + (!random! %% 12)
+echo !enemyName! lashes out for !enemydmg! damage!
+set /a playerHealth-=enemydmg
+if !playerHealth! LEQ 0 goto bossdeath
+pause
+goto ch3minibossloop
+
+:ch3tutorialcheck
+if "!usedNormal!"=="1" if "!usedPiercer!"=="1" (
+    echo.
+    echo You defeated !enemyName!.
+    echo His cloak falls into ash.
+    echo.
+    echo [CHECKPOINT SAVED]
+    echo Third-checkpoint>save.txt
+    echo The revolver is now permanently unlocked!
+    pause
+    endlocal
+    goto boss-ch3
+) else (
+    echo.
+    echo The Tormented refuses to die...
+    echo You must use BOTH Normal and Piercer fire!
+    set /a enemyHealth=10
+    pause
+    goto ch3minibossloop
+)
+
+
+cls
+echo -----------------------------------------
+echo.
+echo Chapter Three: No hope, No mercy. (6/9)
+echo.
+echo -----------------------------------------
+echo.
+echo The voice echoes:
+echo.
+echo "If you killed him... you’re ready for me."
+echo.
+pause
+
+cls
+echo -----------------------------------------
+echo.
+echo Chapter Three: No hope, No mercy. (7/9)
+echo.
+echo -----------------------------------------
+echo.
+echo A massive door opens.
+echo.
+echo Inside waits a towering figure: "The Judge"
+echo.
+echo "No mercy shall be given."
+echo.
+pause
+goto boss-ch3
+
+:boss-ch3
+setlocal enabledelayedexpansion
+set "enemyName=The Judge"
+set "enemyHealth=200"
+set /a playerHealth=120
+
+:ch3bossloop
+cls
+echo -----------------------------------------
+echo.
+echo Chapter Three: No hope, No mercy. (BOSS: !enemyName!)
+echo.
+echo -----------------------------------------
+echo Your Health: !playerHealth!
+echo !enemyName! Health: !enemyHealth!
+echo.
+echo [1] Attack
+echo [2] Guard
+echo [3] Desperation (risky)
+echo [4] Revolver - Normal Fire
+echo [5] Revolver - Piercer Fire (risky)
+set /p choice="> "
+
+if "!choice!"=="1" goto ch3bossattack
+if "!choice!"=="2" goto ch3bossguard
+if "!choice!"=="3" goto ch3bossdesperation
+if "!choice!"=="4" goto ch3revnormal-boss
+if "!choice!"=="5" goto ch3revpiercer-boss
+goto ch3bossloop
+
+:ch3bossattack
+set /a dmg=12 + (!random! %% 18)
+echo You deal !dmg! damage.
+set /a enemyHealth-=dmg
+if !enemyHealth! LEQ 0 goto ch3bosswin
+goto ch3bossturn
+
+:ch3bossguard
+echo You brace yourself.
+set /a dmg=5 + (!random! %% 8)
+echo Reduced damage taken: !dmg!
+set /a playerHealth-=dmg
+if !playerHealth! LEQ 0 goto bossdeath
+pause
+goto ch3bossloop
+
+:ch3bossdesperation
+set /a risk=!random! %% 2
+if !risk!==0 (
+    echo Desperation pays off! You deal 40 damage.
+    set /a enemyHealth-=40
+    if !enemyHealth! LEQ 0 goto ch3bosswin
+) else (
+    echo Desperation backfires! You take 30 damage.
+    set /a playerHealth-=30
+    if !playerHealth! LEQ 0 goto bossdeath
+)
+pause
+goto ch3bossturn
+
+:ch3revnormal-boss
+set /a dmg=15 + (!random! %% 12)
+echo You fire Normal Revolver. !dmg! damage!
+set /a enemyHealth-=dmg
+if !enemyHealth! LEQ 0 goto ch3bosswin
+goto ch3bossturn
+
+:ch3revpiercer-boss
+set /a dmg=30 + (!random! %% 20)
+set /a backlash=!random! %% 5
+echo You fire PIERCER! !dmg! damage!
+set /a enemyHealth-=dmg
+set /a guardbreak=!random! %% 4
+if !guardbreak!==0 echo Piercer shot pierces the guard!
+if !backlash!==0 (
+    echo The revolver shocks you! -15 HP
+    set /a playerHealth-=15
+    if !playerHealth! LEQ 0 goto bossdeath
+)
+if !enemyHealth! LEQ 0 goto ch3bosswin
+goto ch3bossturn
+
+:ch3bossturn
+set /a enemydmg=15 + (!random! %% 20)
+echo !enemyName! smashes you for !enemydmg! damage!
+set /a playerHealth-=enemydmg
+if !playerHealth! LEQ 0 goto bossdeath
+pause
+goto ch3bossloop
+
+:ch3bosswin
+echo.
+echo You defeated !enemyName! The Judge crumbles into dust.
+echo.
+pause
+
+
+cls
+echo -----------------------------------------
+echo.
+echo Chapter Three: No hope, No mercy. (8/9)
+echo.
+echo -----------------------------------------
+echo.
+echo Silence fills the void.
+echo.
+echo "Perhaps... there was hope after all."
+echo.
+echo A light appears, guiding you forward.
+echo.
+echo.
+echo It leads you to another elevator... you step in it.
+pause
+
+cls
+echo -----------------------------------------
+echo.
+echo Chapter Three: No hope, No mercy. (9/9)
+echo.
+echo -----------------------------------------
+echo.
+echo You ride the elevator, the revolver in your hands.
+echo.
+echo You feel a sense of power holding it.
+echo.
+echo ...
+echo.
+echo To be continued.
+echo Fourth.>save.txt
+pause
+findstr /C:"beat chapter 3" "%basedir%Badges.txt" >nul 2>&1
+if errorlevel 1 (
+    (
+        echo Badge: [GOLD] beat Chapter 3
+        echo Complete chapter 3 "No hope, No mercy."
+        echo Claimed: "No hope, No mercy."
+        echo
+        echo ================================
+    ) >> "%basedir%Badges.txt"
+)
+
+findstr /C:"beat chapter 3 EARLY" "%basedir%Badges.txt" >nul 2>&1
+if errorlevel 1 (
+    (
+        echo Badge: [Platinum] beat Chapter 3... EARLY
+        echo Complete chapter 3 "No hope, No mercy." WHILE ITS EARLY ACCSESS!!!!
+        echo Claimed: "No hope, No mercy."
+        echo
+        echo ================================
+    ) >> "%basedir%Badges.txt"
+)
 goto menu
