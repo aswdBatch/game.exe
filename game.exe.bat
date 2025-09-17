@@ -457,10 +457,11 @@ echo You continue forward, and see an elevator... It's also locked.
 echo.
 echo [TIP: CODE]
 set /p answer%=">"
-if %answer% == Code goto checkpoint-Second
-goto checkpoint-Secondb
+if %answer% == CODE goto checkpoint-Second
+goto checkpoint-Secondb.
 cls
 :checkpoint-Second
+cls
 echo -----------------------------------------
 echo.
 echo Chapter Two: ...Then The Ashes Fell... (9/10)
@@ -594,7 +595,7 @@ pause
 endlocal
 goto Permadeath-guide
 
-:BfThird.
+:BfThird
 echo Third.>save.txt
 cls
 echo -----------------------------------------
@@ -665,7 +666,7 @@ echo Heya!
 echo.
 echo You finished the currently fully done chapters.
 echo.
-echo Wanna do chapter 4 early? U can do dat :D
+echo Wanna do chapter 3 early? U can do dat :D
 echo.
 pause
 goto Third.
@@ -1065,7 +1066,7 @@ if errorlevel 1 (
 findstr /C:"beat chapter 3 EARLY" "%basedir%Badges.txt" >nul 2>&1
 if errorlevel 1 (
     (
-        echo Badge: [Platinum] beat Chapter 3... EARLY
+        echo Badge: [PLATINUM!] beat Chapter 3... EARLY
         echo Complete chapter 3 "No hope, No mercy." WHILE ITS EARLY ACCSESS!!!!
         echo Claimed: "No hope, No mercy."
         echo
