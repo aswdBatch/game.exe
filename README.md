@@ -1,9 +1,27 @@
-# game.exe
-### Early Access branch.
+### game.exe
+# A short story game i m working on.
 =========================================================
 
-# Note this branch can be unstable.
+## Manipulating save file
 
-Please dont use this with the stable release, as it can corrupt saves.
+If you're lazy, or dont wanna do the game again, here's how to skip parts/games:
 
-Please do not use this as the main game, this is mostly experimenting.
+1. Create `save.txt`
+
+2. Enter the part that you want to go (example: If you want to go to chapter 2, put `Second.` in `save.txt`
+
+3. Save file
+
+4. Open game and it should prompt to go to save file.
+
+## How to access Early Access
+
+1. Go to Early Access branch
+
+2. Copy all the code in `game.exe.bat`
+
+3. Put in a `game.exe.bat` file
+
+4. Save file and run.
+
+=========================================================
